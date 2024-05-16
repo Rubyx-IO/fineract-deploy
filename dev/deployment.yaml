@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fineract-server
+spec:
+  template:
+    spec:
+      containers:
+        - name: fineract-server
+          image: gcr.io/d6-dev/fineract/fineract-provider:1.8.3
+          resources:
+            limits:
+              cpu: 3500m
+              ephemeral-storage: 5Gi
+              memory: 4Gi
+            requests:
+              cpu: 3500m
+              ephemeral-storage: 5Gi
+              memory: 4Gi

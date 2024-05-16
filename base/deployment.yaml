@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fineract-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fineract
+      tier: backend
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: fineract
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: fineract-server
+          image: gcr.io/d6-dev/fineract/fineract-provider:1.8.3
+          startupProbe:
+            httpGet:
+              scheme: HTTP
+              path: /fineract-provider/actuator/health
+              port: 8080
+            initialDelaySeconds: 150
+            failureThreshold: 20
+            periodSeconds: 20
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /fineract-provider/actuator/health/liveness
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 5
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /fineract-provider/actuator/health/readiness
+              port: 8080
+            periodSeconds: 10
+          ports:
+            # - containerPort: 8443
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 1500m
+              ephemeral-storage: 2Gi
+              memory: 2Gi
+            requests:
+              cpu: 1500m
+              ephemeral-storage: 2Gi
+              memory: 2Gi
+          envFrom:
+            - configMapRef:
+                name: fineract-server-config
+            - secretRef:
+                name: fineract-server-secret
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fineract-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fineract
+      tier: frontend
+      track: stable
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: fineract
+        tier: frontend
+        track: stable
+    spec:
+      containers:
+        - name: mifos-ui
+          # image: openmf/community-app:latest
+          image: gcr.io/d6-dev/fineract/fineract-old-ui:latest
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 1000m
+              ephemeral-storage: 1Gi
+              memory: 1Gi
+            requests:
+              cpu: 1000m
+              ephemeral-storage: 1Gi
+              memory: 1Gi
+      restartPolicy: Always

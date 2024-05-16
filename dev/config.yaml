@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fineract-server-config
+data:
+  # NOTE: node aware scheduler
+  FINERACT_HIKARI_JDBC_URL: "jdbc:postgresql://y.y.y.y:5432/fineract_tenants"
+  # NOTE: env vars prefixed "FINERACT_DEFAULT_TENANTDB_*" are used to create the default tenant database
+  FINERACT_DEFAULT_TENANTDB_HOSTNAME: "y.y.y.y"
+  FINERACT_DEFAULT_TENANTDB_PORT: "5432"
+  FINERACT_DEFAULT_TENANTDB_CONN_PARAMS: ""
+  FINERACT_DEFAULT_TENANTDB_TIMEZONE: "Africa/Dakar"
+  FINERACT_DEFAULT_TENANTDB_IDENTIFIER: "default"
+  FINERACT_DEFAULT_TENANTDB_NAME: "fineract_default"
+  FINERACT_DEFAULT_TENANTDB_DESCRIPTION: "Default Demo"
+  FINERACT_SERVER_SSL_ENABLED: "false"
+  FINERACT_SERVER_PORT: "8080"
